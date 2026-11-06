@@ -1,0 +1,2825 @@
+{
+  "schemaVersion": 1,
+  "kind": "scripted-control-verifier-check",
+  "note": "These are deterministic scripted controls, not model performance.",
+  "tasks": [
+    {
+      "id": "two_precipitates",
+      "scenario": "precipitation",
+      "seed": 42,
+      "instruction": "Use the two beakers to form silver chloride and a second, different precipitate. Leave both solids on the bench.",
+      "expectedOutcome": "AgCl and a different precipitate remain in separate beakers.",
+      "nearMissViolates": "second",
+      "requirements": [
+        {
+          "id": "agcl",
+          "description": "AgCl reaction and deposited solid remain"
+        },
+        {
+          "id": "second",
+          "description": "A different supported precipitate remains"
+        },
+        {
+          "id": "separate",
+          "description": "The two deposits are in different containers"
+        }
+      ]
+    },
+    {
+      "id": "dilute_in_beaker",
+      "scenario": "dilution",
+      "seed": 42,
+      "instruction": "Prepare 100 mL of 0.10 M NaCl in the beaker from 1.0 M stock and water.",
+      "expectedOutcome": "Beaker c_2 holds 100 mL and 0.010 mol NaCl.",
+      "nearMissViolates": "volume",
+      "requirements": [
+        {
+          "id": "volume",
+          "description": "Beaker volume 100 ± 2 mL"
+        },
+        {
+          "id": "concentration",
+          "description": "Beaker NaCl concentration 0.100 ± 0.005 M"
+        },
+        {
+          "id": "ions",
+          "description": "Na and Cl moles balance"
+        }
+      ]
+    },
+    {
+      "id": "measure_then_neutralize",
+      "scenario": "neutralize",
+      "seed": 3,
+      "instruction": "Measure the starting pH, then bring the challenge beaker to pH 7.0 ± 0.1 using the weak acid stock. Leave the pH meter attached.",
+      "expectedOutcome": "A measured, neutralized beaker with attached pH meter.",
+      "nearMissViolates": "ph",
+      "requirements": [
+        {
+          "id": "initial_measure",
+          "description": "Initial pH measured before reagent addition"
+        },
+        {
+          "id": "ph",
+          "description": "Final pH 7.0 ± 0.1"
+        },
+        {
+          "id": "meter",
+          "description": "pH meter remains attached"
+        }
+      ]
+    },
+    {
+      "id": "titrate_unknown",
+      "scenario": "titration",
+      "seed": 42,
+      "instruction": "Measure flask pH, add phenolphthalein, titrate with the burette through the endpoint, and submit the acid concentration.",
+      "expectedOutcome": "A recorded curve across equivalence and a submitted concentration within 2% of the hidden value.",
+      "nearMissViolates": "answer",
+      "requirements": [
+        {
+          "id": "probe",
+          "description": "pH meter attached and curve contains measured points"
+        },
+        {
+          "id": "indicator",
+          "description": "Indicator remains in flask"
+        },
+        {
+          "id": "endpoint",
+          "description": "Curve spans the independently calculated equivalence volume"
+        },
+        {
+          "id": "answer",
+          "description": "Submitted concentration within 2% of hidden value"
+        }
+      ]
+    },
+    {
+      "id": "gas_from_carbonate",
+      "scenario": "sandbox",
+      "seed": 42,
+      "instruction": "In the starting beaker, combine sodium carbonate and enough hydrochloric acid to release CO2. Leave liquid in the beaker.",
+      "expectedOutcome": "A gas reaction record and liquid in the original beaker.",
+      "nearMissViolates": "gas",
+      "requirements": [
+        {
+          "id": "gas",
+          "description": "CO2 gas reaction occurred"
+        },
+        {
+          "id": "liquid",
+          "description": "Original beaker retains liquid"
+        },
+        {
+          "id": "carbonate",
+          "description": "Carbonate stock was added"
+        }
+      ]
+    },
+    {
+      "id": "transfer_dilution",
+      "scenario": "dilution",
+      "seed": 42,
+      "instruction": "Measure 10 mL of 1.0 M NaCl in the graduated cylinder, transfer it into the beaker, and dilute the beaker to 100 mL of 0.10 M.",
+      "expectedOutcome": "Cylinder measured and transferred; beaker meets volume and concentration targets.",
+      "nearMissViolates": "volume",
+      "requirements": [
+        {
+          "id": "measured",
+          "description": "Cylinder volume was measured before transfer"
+        },
+        {
+          "id": "transferred",
+          "description": "Stock moved from cylinder to beaker"
+        },
+        {
+          "id": "volume",
+          "description": "Beaker volume 100 ± 2 mL"
+        },
+        {
+          "id": "concentration",
+          "description": "Beaker concentration 0.100 ± 0.005 M"
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "task": "two_precipitates",
+      "control": "valid",
+      "pass": 1,
+      "expected": "accept",
+      "expectedScore": {
+        "min": 1
+      },
+      "score": 1,
+      "accepted": true,
+      "checks": [
+        {
+          "id": "agcl",
+          "description": "AgCl reaction and deposited solid remain",
+          "passed": true
+        },
+        {
+          "id": "second",
+          "description": "A different supported precipitate remains",
+          "passed": true
+        },
+        {
+          "id": "separate",
+          "description": "The two deposits are in different containers",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "agno3",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "nacl",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "bacl2",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "na2so4",
+            "volume_ml": 10
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "two_precipitates",
+      "control": "noop",
+      "pass": 1,
+      "expected": "reject",
+      "expectedScore": {
+        "min": 0,
+        "maxExclusive": 0.3333333333333333
+      },
+      "score": 0,
+      "accepted": false,
+      "checks": [
+        {
+          "id": "agcl",
+          "description": "AgCl reaction and deposited solid remain",
+          "passed": false
+        },
+        {
+          "id": "second",
+          "description": "A different supported precipitate remains",
+          "passed": false
+        },
+        {
+          "id": "separate",
+          "description": "The two deposits are in different containers",
+          "passed": false
+        }
+      ],
+      "trace": [
+        {
+          "tool": "get_lab_state",
+          "input": {},
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "two_precipitates",
+      "control": "nearMiss",
+      "pass": 1,
+      "expected": "reject",
+      "expectedScore": {
+        "min": 0,
+        "maxExclusive": 1
+      },
+      "score": 0.3333333333333333,
+      "accepted": false,
+      "checks": [
+        {
+          "id": "agcl",
+          "description": "AgCl reaction and deposited solid remain",
+          "passed": true
+        },
+        {
+          "id": "second",
+          "description": "A different supported precipitate remains",
+          "passed": false
+        },
+        {
+          "id": "separate",
+          "description": "The two deposits are in different containers",
+          "passed": false
+        }
+      ],
+      "trace": [
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "agno3",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "nacl",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "bacl2",
+            "volume_ml": 10
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "two_precipitates",
+      "control": "alternative",
+      "pass": 1,
+      "expected": "accept",
+      "expectedScore": {
+        "min": 1
+      },
+      "score": 1,
+      "accepted": true,
+      "checks": [
+        {
+          "id": "agcl",
+          "description": "AgCl reaction and deposited solid remain",
+          "passed": true
+        },
+        {
+          "id": "second",
+          "description": "A different supported precipitate remains",
+          "passed": true
+        },
+        {
+          "id": "separate",
+          "description": "The two deposits are in different containers",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "nacl",
+            "volume_ml": 12
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "agno3",
+            "volume_ml": 12
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "na2so4",
+            "volume_ml": 8
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "bacl2",
+            "volume_ml": 8
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "dilute_in_beaker",
+      "control": "valid",
+      "pass": 1,
+      "expected": "accept",
+      "expectedScore": {
+        "min": 1
+      },
+      "score": 1,
+      "accepted": true,
+      "checks": [
+        {
+          "id": "volume",
+          "description": "Beaker volume 100 ± 2 mL",
+          "passed": true
+        },
+        {
+          "id": "concentration",
+          "description": "Beaker NaCl concentration 0.100 ± 0.005 M",
+          "passed": true
+        },
+        {
+          "id": "ions",
+          "description": "Na and Cl moles balance",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "nacl",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "water",
+            "volume_ml": 90
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "dilute_in_beaker",
+      "control": "noop",
+      "pass": 1,
+      "expected": "reject",
+      "expectedScore": {
+        "min": 0,
+        "maxExclusive": 0.3333333333333333
+      },
+      "score": 0,
+      "accepted": false,
+      "checks": [
+        {
+          "id": "volume",
+          "description": "Beaker volume 100 ± 2 mL",
+          "passed": false
+        },
+        {
+          "id": "concentration",
+          "description": "Beaker NaCl concentration 0.100 ± 0.005 M",
+          "passed": false
+        },
+        {
+          "id": "ions",
+          "description": "Na and Cl moles balance",
+          "passed": false
+        }
+      ],
+      "trace": [
+        {
+          "tool": "get_lab_state",
+          "input": {},
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "dilute_in_beaker",
+      "control": "nearMiss",
+      "pass": 1,
+      "expected": "reject",
+      "expectedScore": {
+        "min": 0,
+        "maxExclusive": 1
+      },
+      "score": 0.3333333333333333,
+      "accepted": false,
+      "checks": [
+        {
+          "id": "volume",
+          "description": "Beaker volume 100 ± 2 mL",
+          "passed": false
+        },
+        {
+          "id": "concentration",
+          "description": "Beaker NaCl concentration 0.100 ± 0.005 M",
+          "passed": false
+        },
+        {
+          "id": "ions",
+          "description": "Na and Cl moles balance",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "nacl",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "water",
+            "volume_ml": 80
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "dilute_in_beaker",
+      "control": "alternative",
+      "pass": 1,
+      "expected": "accept",
+      "expectedScore": {
+        "min": 1
+      },
+      "score": 1,
+      "accepted": true,
+      "checks": [
+        {
+          "id": "volume",
+          "description": "Beaker volume 100 ± 2 mL",
+          "passed": true
+        },
+        {
+          "id": "concentration",
+          "description": "Beaker NaCl concentration 0.100 ± 0.005 M",
+          "passed": true
+        },
+        {
+          "id": "ions",
+          "description": "Na and Cl moles balance",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "water",
+            "volume_ml": 90
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "nacl",
+            "volume_ml": 10
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "measure_then_neutralize",
+      "control": "valid",
+      "pass": 1,
+      "expected": "accept",
+      "expectedScore": {
+        "min": 1
+      },
+      "score": 1,
+      "accepted": true,
+      "checks": [
+        {
+          "id": "initial_measure",
+          "description": "Initial pH measured before reagent addition",
+          "passed": true
+        },
+        {
+          "id": "ph",
+          "description": "Final pH 7.0 ± 0.1",
+          "passed": true
+        },
+        {
+          "id": "meter",
+          "description": "pH meter remains attached",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "measure_ph",
+          "input": {
+            "container_id": "c_1"
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "acetic_acid",
+            "volume_ml": 10.75,
+            "concentration_m": 0.1
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "measure_then_neutralize",
+      "control": "noop",
+      "pass": 1,
+      "expected": "reject",
+      "expectedScore": {
+        "min": 0,
+        "maxExclusive": 0.3333333333333333
+      },
+      "score": 0,
+      "accepted": false,
+      "checks": [
+        {
+          "id": "initial_measure",
+          "description": "Initial pH measured before reagent addition",
+          "passed": false
+        },
+        {
+          "id": "ph",
+          "description": "Final pH 7.0 ± 0.1",
+          "passed": false
+        },
+        {
+          "id": "meter",
+          "description": "pH meter remains attached",
+          "passed": false
+        }
+      ],
+      "trace": [
+        {
+          "tool": "get_lab_state",
+          "input": {},
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "measure_then_neutralize",
+      "control": "nearMiss",
+      "pass": 1,
+      "expected": "reject",
+      "expectedScore": {
+        "min": 0,
+        "maxExclusive": 1
+      },
+      "score": 0.6666666666666666,
+      "accepted": false,
+      "checks": [
+        {
+          "id": "initial_measure",
+          "description": "Initial pH measured before reagent addition",
+          "passed": true
+        },
+        {
+          "id": "ph",
+          "description": "Final pH 7.0 ± 0.1",
+          "passed": false
+        },
+        {
+          "id": "meter",
+          "description": "pH meter remains attached",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "measure_ph",
+          "input": {
+            "container_id": "c_1"
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "acetic_acid",
+            "volume_ml": 8,
+            "concentration_m": 0.1
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "measure_then_neutralize",
+      "control": "alternative",
+      "pass": 1,
+      "expected": "accept",
+      "expectedScore": {
+        "min": 1
+      },
+      "score": 1,
+      "accepted": true,
+      "checks": [
+        {
+          "id": "initial_measure",
+          "description": "Initial pH measured before reagent addition",
+          "passed": true
+        },
+        {
+          "id": "ph",
+          "description": "Final pH 7.0 ± 0.1",
+          "passed": true
+        },
+        {
+          "id": "meter",
+          "description": "pH meter remains attached",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "measure_ph",
+          "input": {
+            "container_id": "c_1"
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "acetic_acid",
+            "volume_ml": 5.375,
+            "concentration_m": 0.1
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "acetic_acid",
+            "volume_ml": 5.375,
+            "concentration_m": 0.1
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "titrate_unknown",
+      "control": "valid",
+      "pass": 1,
+      "expected": "accept",
+      "expectedScore": {
+        "min": 1
+      },
+      "score": 1,
+      "accepted": true,
+      "checks": [
+        {
+          "id": "probe",
+          "description": "pH meter attached and curve contains measured points",
+          "passed": true
+        },
+        {
+          "id": "indicator",
+          "description": "Indicator remains in flask",
+          "passed": true
+        },
+        {
+          "id": "endpoint",
+          "description": "Curve spans the independently calculated equivalence volume",
+          "passed": true
+        },
+        {
+          "id": "answer",
+          "description": "Submitted concentration within 2% of hidden value",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "measure_ph",
+          "input": {
+            "container_id": "c_1"
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_indicator",
+          "input": {
+            "container_id": "c_1",
+            "indicator_id": "phenolphthalein"
+          },
+          "ok": true
+        },
+        {
+          "tool": "dispense",
+          "input": {
+            "burette_id": "c_2",
+            "destination_id": "c_1",
+            "volume_ml": 25
+          },
+          "ok": true
+        },
+        {
+          "tool": "dispense",
+          "input": {
+            "burette_id": "c_2",
+            "destination_id": "c_1",
+            "volume_ml": 1
+          },
+          "ok": true
+        },
+        {
+          "tool": "dispense",
+          "input": {
+            "burette_id": "c_2",
+            "destination_id": "c_1",
+            "volume_ml": 0.5
+          },
+          "ok": true
+        },
+        {
+          "tool": "submit_conclusion",
+          "input": {
+            "answers": [
+              {
+                "container_id": "c_1",
+                "concentration_m": 0.104
+              }
+            ]
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "titrate_unknown",
+      "control": "noop",
+      "pass": 1,
+      "expected": "reject",
+      "expectedScore": {
+        "min": 0,
+        "maxExclusive": 0.25
+      },
+      "score": 0,
+      "accepted": false,
+      "checks": [
+        {
+          "id": "probe",
+          "description": "pH meter attached and curve contains measured points",
+          "passed": false
+        },
+        {
+          "id": "indicator",
+          "description": "Indicator remains in flask",
+          "passed": false
+        },
+        {
+          "id": "endpoint",
+          "description": "Curve spans the independently calculated equivalence volume",
+          "passed": false
+        },
+        {
+          "id": "answer",
+          "description": "Submitted concentration within 2% of hidden value",
+          "passed": false
+        }
+      ],
+      "trace": [
+        {
+          "tool": "get_lab_state",
+          "input": {},
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "titrate_unknown",
+      "control": "nearMiss",
+      "pass": 1,
+      "expected": "reject",
+      "expectedScore": {
+        "min": 0,
+        "maxExclusive": 1
+      },
+      "score": 0.75,
+      "accepted": false,
+      "checks": [
+        {
+          "id": "probe",
+          "description": "pH meter attached and curve contains measured points",
+          "passed": true
+        },
+        {
+          "id": "indicator",
+          "description": "Indicator remains in flask",
+          "passed": true
+        },
+        {
+          "id": "endpoint",
+          "description": "Curve spans the independently calculated equivalence volume",
+          "passed": true
+        },
+        {
+          "id": "answer",
+          "description": "Submitted concentration within 2% of hidden value",
+          "passed": false
+        }
+      ],
+      "trace": [
+        {
+          "tool": "measure_ph",
+          "input": {
+            "container_id": "c_1"
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_indicator",
+          "input": {
+            "container_id": "c_1",
+            "indicator_id": "phenolphthalein"
+          },
+          "ok": true
+        },
+        {
+          "tool": "dispense",
+          "input": {
+            "burette_id": "c_2",
+            "destination_id": "c_1",
+            "volume_ml": 25
+          },
+          "ok": true
+        },
+        {
+          "tool": "dispense",
+          "input": {
+            "burette_id": "c_2",
+            "destination_id": "c_1",
+            "volume_ml": 1
+          },
+          "ok": true
+        },
+        {
+          "tool": "dispense",
+          "input": {
+            "burette_id": "c_2",
+            "destination_id": "c_1",
+            "volume_ml": 0.5
+          },
+          "ok": true
+        },
+        {
+          "tool": "submit_conclusion",
+          "input": {
+            "answers": [
+              {
+                "container_id": "c_1",
+                "concentration_m": 0.115
+              }
+            ]
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "titrate_unknown",
+      "control": "alternative",
+      "pass": 1,
+      "expected": "accept",
+      "expectedScore": {
+        "min": 1
+      },
+      "score": 1,
+      "accepted": true,
+      "checks": [
+        {
+          "id": "probe",
+          "description": "pH meter attached and curve contains measured points",
+          "passed": true
+        },
+        {
+          "id": "indicator",
+          "description": "Indicator remains in flask",
+          "passed": true
+        },
+        {
+          "id": "endpoint",
+          "description": "Curve spans the independently calculated equivalence volume",
+          "passed": true
+        },
+        {
+          "id": "answer",
+          "description": "Submitted concentration within 2% of hidden value",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "measure_ph",
+          "input": {
+            "container_id": "c_1"
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_indicator",
+          "input": {
+            "container_id": "c_1",
+            "indicator_id": "universal"
+          },
+          "ok": true
+        },
+        {
+          "tool": "dispense",
+          "input": {
+            "burette_id": "c_2",
+            "destination_id": "c_1",
+            "volume_ml": 20
+          },
+          "ok": true
+        },
+        {
+          "tool": "dispense",
+          "input": {
+            "burette_id": "c_2",
+            "destination_id": "c_1",
+            "volume_ml": 5
+          },
+          "ok": true
+        },
+        {
+          "tool": "dispense",
+          "input": {
+            "burette_id": "c_2",
+            "destination_id": "c_1",
+            "volume_ml": 1.5
+          },
+          "ok": true
+        },
+        {
+          "tool": "submit_conclusion",
+          "input": {
+            "answers": [
+              {
+                "container_id": "c_1",
+                "concentration_m": 0.1045
+              }
+            ]
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "gas_from_carbonate",
+      "control": "valid",
+      "pass": 1,
+      "expected": "accept",
+      "expectedScore": {
+        "min": 1
+      },
+      "score": 1,
+      "accepted": true,
+      "checks": [
+        {
+          "id": "gas",
+          "description": "CO2 gas reaction occurred",
+          "passed": true
+        },
+        {
+          "id": "liquid",
+          "description": "Original beaker retains liquid",
+          "passed": true
+        },
+        {
+          "id": "carbonate",
+          "description": "Carbonate stock was added",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "na2co3",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "hcl",
+            "volume_ml": 25
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "gas_from_carbonate",
+      "control": "noop",
+      "pass": 1,
+      "expected": "reject",
+      "expectedScore": {
+        "min": 0,
+        "maxExclusive": 0.3333333333333333
+      },
+      "score": 0,
+      "accepted": false,
+      "checks": [
+        {
+          "id": "gas",
+          "description": "CO2 gas reaction occurred",
+          "passed": false
+        },
+        {
+          "id": "liquid",
+          "description": "Original beaker retains liquid",
+          "passed": false
+        },
+        {
+          "id": "carbonate",
+          "description": "Carbonate stock was added",
+          "passed": false
+        }
+      ],
+      "trace": [
+        {
+          "tool": "get_lab_state",
+          "input": {},
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "gas_from_carbonate",
+      "control": "nearMiss",
+      "pass": 1,
+      "expected": "reject",
+      "expectedScore": {
+        "min": 0,
+        "maxExclusive": 1
+      },
+      "score": 0.6666666666666666,
+      "accepted": false,
+      "checks": [
+        {
+          "id": "gas",
+          "description": "CO2 gas reaction occurred",
+          "passed": false
+        },
+        {
+          "id": "liquid",
+          "description": "Original beaker retains liquid",
+          "passed": true
+        },
+        {
+          "id": "carbonate",
+          "description": "Carbonate stock was added",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "na2co3",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "hcl",
+            "volume_ml": 5
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "gas_from_carbonate",
+      "control": "alternative",
+      "pass": 1,
+      "expected": "accept",
+      "expectedScore": {
+        "min": 1
+      },
+      "score": 1,
+      "accepted": true,
+      "checks": [
+        {
+          "id": "gas",
+          "description": "CO2 gas reaction occurred",
+          "passed": true
+        },
+        {
+          "id": "liquid",
+          "description": "Original beaker retains liquid",
+          "passed": true
+        },
+        {
+          "id": "carbonate",
+          "description": "Carbonate stock was added",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "hcl",
+            "volume_ml": 25
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "na2co3",
+            "volume_ml": 10
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "transfer_dilution",
+      "control": "valid",
+      "pass": 1,
+      "expected": "accept",
+      "expectedScore": {
+        "min": 1
+      },
+      "score": 1,
+      "accepted": true,
+      "checks": [
+        {
+          "id": "measured",
+          "description": "Cylinder volume was measured before transfer",
+          "passed": true
+        },
+        {
+          "id": "transferred",
+          "description": "Stock moved from cylinder to beaker",
+          "passed": true
+        },
+        {
+          "id": "volume",
+          "description": "Beaker volume 100 ± 2 mL",
+          "passed": true
+        },
+        {
+          "id": "concentration",
+          "description": "Beaker concentration 0.100 ± 0.005 M",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "nacl",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "measure_volume",
+          "input": {
+            "container_id": "c_1"
+          },
+          "ok": true
+        },
+        {
+          "tool": "transfer",
+          "input": {
+            "source_id": "c_1",
+            "destination_id": "c_2",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "water",
+            "volume_ml": 90
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "transfer_dilution",
+      "control": "noop",
+      "pass": 1,
+      "expected": "reject",
+      "expectedScore": {
+        "min": 0,
+        "maxExclusive": 0.25
+      },
+      "score": 0,
+      "accepted": false,
+      "checks": [
+        {
+          "id": "measured",
+          "description": "Cylinder volume was measured before transfer",
+          "passed": false
+        },
+        {
+          "id": "transferred",
+          "description": "Stock moved from cylinder to beaker",
+          "passed": false
+        },
+        {
+          "id": "volume",
+          "description": "Beaker volume 100 ± 2 mL",
+          "passed": false
+        },
+        {
+          "id": "concentration",
+          "description": "Beaker concentration 0.100 ± 0.005 M",
+          "passed": false
+        }
+      ],
+      "trace": [
+        {
+          "tool": "get_lab_state",
+          "input": {},
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "transfer_dilution",
+      "control": "nearMiss",
+      "pass": 1,
+      "expected": "reject",
+      "expectedScore": {
+        "min": 0,
+        "maxExclusive": 1
+      },
+      "score": 0.5,
+      "accepted": false,
+      "checks": [
+        {
+          "id": "measured",
+          "description": "Cylinder volume was measured before transfer",
+          "passed": true
+        },
+        {
+          "id": "transferred",
+          "description": "Stock moved from cylinder to beaker",
+          "passed": true
+        },
+        {
+          "id": "volume",
+          "description": "Beaker volume 100 ± 2 mL",
+          "passed": false
+        },
+        {
+          "id": "concentration",
+          "description": "Beaker concentration 0.100 ± 0.005 M",
+          "passed": false
+        }
+      ],
+      "trace": [
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "nacl",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "measure_volume",
+          "input": {
+            "container_id": "c_1"
+          },
+          "ok": true
+        },
+        {
+          "tool": "transfer",
+          "input": {
+            "source_id": "c_1",
+            "destination_id": "c_2",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "water",
+            "volume_ml": 80
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "transfer_dilution",
+      "control": "alternative",
+      "pass": 1,
+      "expected": "accept",
+      "expectedScore": {
+        "min": 1
+      },
+      "score": 1,
+      "accepted": true,
+      "checks": [
+        {
+          "id": "measured",
+          "description": "Cylinder volume was measured before transfer",
+          "passed": true
+        },
+        {
+          "id": "transferred",
+          "description": "Stock moved from cylinder to beaker",
+          "passed": true
+        },
+        {
+          "id": "volume",
+          "description": "Beaker volume 100 ± 2 mL",
+          "passed": true
+        },
+        {
+          "id": "concentration",
+          "description": "Beaker concentration 0.100 ± 0.005 M",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "nacl",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "measure_volume",
+          "input": {
+            "container_id": "c_1"
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "water",
+            "volume_ml": 90
+          },
+          "ok": true
+        },
+        {
+          "tool": "transfer",
+          "input": {
+            "source_id": "c_1",
+            "destination_id": "c_2",
+            "volume_ml": 10
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "two_precipitates",
+      "control": "valid",
+      "pass": 2,
+      "expected": "accept",
+      "expectedScore": {
+        "min": 1
+      },
+      "score": 1,
+      "accepted": true,
+      "checks": [
+        {
+          "id": "agcl",
+          "description": "AgCl reaction and deposited solid remain",
+          "passed": true
+        },
+        {
+          "id": "second",
+          "description": "A different supported precipitate remains",
+          "passed": true
+        },
+        {
+          "id": "separate",
+          "description": "The two deposits are in different containers",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "agno3",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "nacl",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "bacl2",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "na2so4",
+            "volume_ml": 10
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "two_precipitates",
+      "control": "noop",
+      "pass": 2,
+      "expected": "reject",
+      "expectedScore": {
+        "min": 0,
+        "maxExclusive": 0.3333333333333333
+      },
+      "score": 0,
+      "accepted": false,
+      "checks": [
+        {
+          "id": "agcl",
+          "description": "AgCl reaction and deposited solid remain",
+          "passed": false
+        },
+        {
+          "id": "second",
+          "description": "A different supported precipitate remains",
+          "passed": false
+        },
+        {
+          "id": "separate",
+          "description": "The two deposits are in different containers",
+          "passed": false
+        }
+      ],
+      "trace": [
+        {
+          "tool": "get_lab_state",
+          "input": {},
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "two_precipitates",
+      "control": "nearMiss",
+      "pass": 2,
+      "expected": "reject",
+      "expectedScore": {
+        "min": 0,
+        "maxExclusive": 1
+      },
+      "score": 0.3333333333333333,
+      "accepted": false,
+      "checks": [
+        {
+          "id": "agcl",
+          "description": "AgCl reaction and deposited solid remain",
+          "passed": true
+        },
+        {
+          "id": "second",
+          "description": "A different supported precipitate remains",
+          "passed": false
+        },
+        {
+          "id": "separate",
+          "description": "The two deposits are in different containers",
+          "passed": false
+        }
+      ],
+      "trace": [
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "agno3",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "nacl",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "bacl2",
+            "volume_ml": 10
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "two_precipitates",
+      "control": "alternative",
+      "pass": 2,
+      "expected": "accept",
+      "expectedScore": {
+        "min": 1
+      },
+      "score": 1,
+      "accepted": true,
+      "checks": [
+        {
+          "id": "agcl",
+          "description": "AgCl reaction and deposited solid remain",
+          "passed": true
+        },
+        {
+          "id": "second",
+          "description": "A different supported precipitate remains",
+          "passed": true
+        },
+        {
+          "id": "separate",
+          "description": "The two deposits are in different containers",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "nacl",
+            "volume_ml": 12
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "agno3",
+            "volume_ml": 12
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "na2so4",
+            "volume_ml": 8
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "bacl2",
+            "volume_ml": 8
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "dilute_in_beaker",
+      "control": "valid",
+      "pass": 2,
+      "expected": "accept",
+      "expectedScore": {
+        "min": 1
+      },
+      "score": 1,
+      "accepted": true,
+      "checks": [
+        {
+          "id": "volume",
+          "description": "Beaker volume 100 ± 2 mL",
+          "passed": true
+        },
+        {
+          "id": "concentration",
+          "description": "Beaker NaCl concentration 0.100 ± 0.005 M",
+          "passed": true
+        },
+        {
+          "id": "ions",
+          "description": "Na and Cl moles balance",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "nacl",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "water",
+            "volume_ml": 90
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "dilute_in_beaker",
+      "control": "noop",
+      "pass": 2,
+      "expected": "reject",
+      "expectedScore": {
+        "min": 0,
+        "maxExclusive": 0.3333333333333333
+      },
+      "score": 0,
+      "accepted": false,
+      "checks": [
+        {
+          "id": "volume",
+          "description": "Beaker volume 100 ± 2 mL",
+          "passed": false
+        },
+        {
+          "id": "concentration",
+          "description": "Beaker NaCl concentration 0.100 ± 0.005 M",
+          "passed": false
+        },
+        {
+          "id": "ions",
+          "description": "Na and Cl moles balance",
+          "passed": false
+        }
+      ],
+      "trace": [
+        {
+          "tool": "get_lab_state",
+          "input": {},
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "dilute_in_beaker",
+      "control": "nearMiss",
+      "pass": 2,
+      "expected": "reject",
+      "expectedScore": {
+        "min": 0,
+        "maxExclusive": 1
+      },
+      "score": 0.3333333333333333,
+      "accepted": false,
+      "checks": [
+        {
+          "id": "volume",
+          "description": "Beaker volume 100 ± 2 mL",
+          "passed": false
+        },
+        {
+          "id": "concentration",
+          "description": "Beaker NaCl concentration 0.100 ± 0.005 M",
+          "passed": false
+        },
+        {
+          "id": "ions",
+          "description": "Na and Cl moles balance",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "nacl",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "water",
+            "volume_ml": 80
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "dilute_in_beaker",
+      "control": "alternative",
+      "pass": 2,
+      "expected": "accept",
+      "expectedScore": {
+        "min": 1
+      },
+      "score": 1,
+      "accepted": true,
+      "checks": [
+        {
+          "id": "volume",
+          "description": "Beaker volume 100 ± 2 mL",
+          "passed": true
+        },
+        {
+          "id": "concentration",
+          "description": "Beaker NaCl concentration 0.100 ± 0.005 M",
+          "passed": true
+        },
+        {
+          "id": "ions",
+          "description": "Na and Cl moles balance",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "water",
+            "volume_ml": 90
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "nacl",
+            "volume_ml": 10
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "measure_then_neutralize",
+      "control": "valid",
+      "pass": 2,
+      "expected": "accept",
+      "expectedScore": {
+        "min": 1
+      },
+      "score": 1,
+      "accepted": true,
+      "checks": [
+        {
+          "id": "initial_measure",
+          "description": "Initial pH measured before reagent addition",
+          "passed": true
+        },
+        {
+          "id": "ph",
+          "description": "Final pH 7.0 ± 0.1",
+          "passed": true
+        },
+        {
+          "id": "meter",
+          "description": "pH meter remains attached",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "measure_ph",
+          "input": {
+            "container_id": "c_1"
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "acetic_acid",
+            "volume_ml": 10.75,
+            "concentration_m": 0.1
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "measure_then_neutralize",
+      "control": "noop",
+      "pass": 2,
+      "expected": "reject",
+      "expectedScore": {
+        "min": 0,
+        "maxExclusive": 0.3333333333333333
+      },
+      "score": 0,
+      "accepted": false,
+      "checks": [
+        {
+          "id": "initial_measure",
+          "description": "Initial pH measured before reagent addition",
+          "passed": false
+        },
+        {
+          "id": "ph",
+          "description": "Final pH 7.0 ± 0.1",
+          "passed": false
+        },
+        {
+          "id": "meter",
+          "description": "pH meter remains attached",
+          "passed": false
+        }
+      ],
+      "trace": [
+        {
+          "tool": "get_lab_state",
+          "input": {},
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "measure_then_neutralize",
+      "control": "nearMiss",
+      "pass": 2,
+      "expected": "reject",
+      "expectedScore": {
+        "min": 0,
+        "maxExclusive": 1
+      },
+      "score": 0.6666666666666666,
+      "accepted": false,
+      "checks": [
+        {
+          "id": "initial_measure",
+          "description": "Initial pH measured before reagent addition",
+          "passed": true
+        },
+        {
+          "id": "ph",
+          "description": "Final pH 7.0 ± 0.1",
+          "passed": false
+        },
+        {
+          "id": "meter",
+          "description": "pH meter remains attached",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "measure_ph",
+          "input": {
+            "container_id": "c_1"
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "acetic_acid",
+            "volume_ml": 8,
+            "concentration_m": 0.1
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "measure_then_neutralize",
+      "control": "alternative",
+      "pass": 2,
+      "expected": "accept",
+      "expectedScore": {
+        "min": 1
+      },
+      "score": 1,
+      "accepted": true,
+      "checks": [
+        {
+          "id": "initial_measure",
+          "description": "Initial pH measured before reagent addition",
+          "passed": true
+        },
+        {
+          "id": "ph",
+          "description": "Final pH 7.0 ± 0.1",
+          "passed": true
+        },
+        {
+          "id": "meter",
+          "description": "pH meter remains attached",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "measure_ph",
+          "input": {
+            "container_id": "c_1"
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "acetic_acid",
+            "volume_ml": 5.375,
+            "concentration_m": 0.1
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "acetic_acid",
+            "volume_ml": 5.375,
+            "concentration_m": 0.1
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "titrate_unknown",
+      "control": "valid",
+      "pass": 2,
+      "expected": "accept",
+      "expectedScore": {
+        "min": 1
+      },
+      "score": 1,
+      "accepted": true,
+      "checks": [
+        {
+          "id": "probe",
+          "description": "pH meter attached and curve contains measured points",
+          "passed": true
+        },
+        {
+          "id": "indicator",
+          "description": "Indicator remains in flask",
+          "passed": true
+        },
+        {
+          "id": "endpoint",
+          "description": "Curve spans the independently calculated equivalence volume",
+          "passed": true
+        },
+        {
+          "id": "answer",
+          "description": "Submitted concentration within 2% of hidden value",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "measure_ph",
+          "input": {
+            "container_id": "c_1"
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_indicator",
+          "input": {
+            "container_id": "c_1",
+            "indicator_id": "phenolphthalein"
+          },
+          "ok": true
+        },
+        {
+          "tool": "dispense",
+          "input": {
+            "burette_id": "c_2",
+            "destination_id": "c_1",
+            "volume_ml": 25
+          },
+          "ok": true
+        },
+        {
+          "tool": "dispense",
+          "input": {
+            "burette_id": "c_2",
+            "destination_id": "c_1",
+            "volume_ml": 1
+          },
+          "ok": true
+        },
+        {
+          "tool": "dispense",
+          "input": {
+            "burette_id": "c_2",
+            "destination_id": "c_1",
+            "volume_ml": 0.5
+          },
+          "ok": true
+        },
+        {
+          "tool": "submit_conclusion",
+          "input": {
+            "answers": [
+              {
+                "container_id": "c_1",
+                "concentration_m": 0.104
+              }
+            ]
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "titrate_unknown",
+      "control": "noop",
+      "pass": 2,
+      "expected": "reject",
+      "expectedScore": {
+        "min": 0,
+        "maxExclusive": 0.25
+      },
+      "score": 0,
+      "accepted": false,
+      "checks": [
+        {
+          "id": "probe",
+          "description": "pH meter attached and curve contains measured points",
+          "passed": false
+        },
+        {
+          "id": "indicator",
+          "description": "Indicator remains in flask",
+          "passed": false
+        },
+        {
+          "id": "endpoint",
+          "description": "Curve spans the independently calculated equivalence volume",
+          "passed": false
+        },
+        {
+          "id": "answer",
+          "description": "Submitted concentration within 2% of hidden value",
+          "passed": false
+        }
+      ],
+      "trace": [
+        {
+          "tool": "get_lab_state",
+          "input": {},
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "titrate_unknown",
+      "control": "nearMiss",
+      "pass": 2,
+      "expected": "reject",
+      "expectedScore": {
+        "min": 0,
+        "maxExclusive": 1
+      },
+      "score": 0.75,
+      "accepted": false,
+      "checks": [
+        {
+          "id": "probe",
+          "description": "pH meter attached and curve contains measured points",
+          "passed": true
+        },
+        {
+          "id": "indicator",
+          "description": "Indicator remains in flask",
+          "passed": true
+        },
+        {
+          "id": "endpoint",
+          "description": "Curve spans the independently calculated equivalence volume",
+          "passed": true
+        },
+        {
+          "id": "answer",
+          "description": "Submitted concentration within 2% of hidden value",
+          "passed": false
+        }
+      ],
+      "trace": [
+        {
+          "tool": "measure_ph",
+          "input": {
+            "container_id": "c_1"
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_indicator",
+          "input": {
+            "container_id": "c_1",
+            "indicator_id": "phenolphthalein"
+          },
+          "ok": true
+        },
+        {
+          "tool": "dispense",
+          "input": {
+            "burette_id": "c_2",
+            "destination_id": "c_1",
+            "volume_ml": 25
+          },
+          "ok": true
+        },
+        {
+          "tool": "dispense",
+          "input": {
+            "burette_id": "c_2",
+            "destination_id": "c_1",
+            "volume_ml": 1
+          },
+          "ok": true
+        },
+        {
+          "tool": "dispense",
+          "input": {
+            "burette_id": "c_2",
+            "destination_id": "c_1",
+            "volume_ml": 0.5
+          },
+          "ok": true
+        },
+        {
+          "tool": "submit_conclusion",
+          "input": {
+            "answers": [
+              {
+                "container_id": "c_1",
+                "concentration_m": 0.115
+              }
+            ]
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "titrate_unknown",
+      "control": "alternative",
+      "pass": 2,
+      "expected": "accept",
+      "expectedScore": {
+        "min": 1
+      },
+      "score": 1,
+      "accepted": true,
+      "checks": [
+        {
+          "id": "probe",
+          "description": "pH meter attached and curve contains measured points",
+          "passed": true
+        },
+        {
+          "id": "indicator",
+          "description": "Indicator remains in flask",
+          "passed": true
+        },
+        {
+          "id": "endpoint",
+          "description": "Curve spans the independently calculated equivalence volume",
+          "passed": true
+        },
+        {
+          "id": "answer",
+          "description": "Submitted concentration within 2% of hidden value",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "measure_ph",
+          "input": {
+            "container_id": "c_1"
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_indicator",
+          "input": {
+            "container_id": "c_1",
+            "indicator_id": "universal"
+          },
+          "ok": true
+        },
+        {
+          "tool": "dispense",
+          "input": {
+            "burette_id": "c_2",
+            "destination_id": "c_1",
+            "volume_ml": 20
+          },
+          "ok": true
+        },
+        {
+          "tool": "dispense",
+          "input": {
+            "burette_id": "c_2",
+            "destination_id": "c_1",
+            "volume_ml": 5
+          },
+          "ok": true
+        },
+        {
+          "tool": "dispense",
+          "input": {
+            "burette_id": "c_2",
+            "destination_id": "c_1",
+            "volume_ml": 1.5
+          },
+          "ok": true
+        },
+        {
+          "tool": "submit_conclusion",
+          "input": {
+            "answers": [
+              {
+                "container_id": "c_1",
+                "concentration_m": 0.1045
+              }
+            ]
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "gas_from_carbonate",
+      "control": "valid",
+      "pass": 2,
+      "expected": "accept",
+      "expectedScore": {
+        "min": 1
+      },
+      "score": 1,
+      "accepted": true,
+      "checks": [
+        {
+          "id": "gas",
+          "description": "CO2 gas reaction occurred",
+          "passed": true
+        },
+        {
+          "id": "liquid",
+          "description": "Original beaker retains liquid",
+          "passed": true
+        },
+        {
+          "id": "carbonate",
+          "description": "Carbonate stock was added",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "na2co3",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "hcl",
+            "volume_ml": 25
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "gas_from_carbonate",
+      "control": "noop",
+      "pass": 2,
+      "expected": "reject",
+      "expectedScore": {
+        "min": 0,
+        "maxExclusive": 0.3333333333333333
+      },
+      "score": 0,
+      "accepted": false,
+      "checks": [
+        {
+          "id": "gas",
+          "description": "CO2 gas reaction occurred",
+          "passed": false
+        },
+        {
+          "id": "liquid",
+          "description": "Original beaker retains liquid",
+          "passed": false
+        },
+        {
+          "id": "carbonate",
+          "description": "Carbonate stock was added",
+          "passed": false
+        }
+      ],
+      "trace": [
+        {
+          "tool": "get_lab_state",
+          "input": {},
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "gas_from_carbonate",
+      "control": "nearMiss",
+      "pass": 2,
+      "expected": "reject",
+      "expectedScore": {
+        "min": 0,
+        "maxExclusive": 1
+      },
+      "score": 0.6666666666666666,
+      "accepted": false,
+      "checks": [
+        {
+          "id": "gas",
+          "description": "CO2 gas reaction occurred",
+          "passed": false
+        },
+        {
+          "id": "liquid",
+          "description": "Original beaker retains liquid",
+          "passed": true
+        },
+        {
+          "id": "carbonate",
+          "description": "Carbonate stock was added",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "na2co3",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "hcl",
+            "volume_ml": 5
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "gas_from_carbonate",
+      "control": "alternative",
+      "pass": 2,
+      "expected": "accept",
+      "expectedScore": {
+        "min": 1
+      },
+      "score": 1,
+      "accepted": true,
+      "checks": [
+        {
+          "id": "gas",
+          "description": "CO2 gas reaction occurred",
+          "passed": true
+        },
+        {
+          "id": "liquid",
+          "description": "Original beaker retains liquid",
+          "passed": true
+        },
+        {
+          "id": "carbonate",
+          "description": "Carbonate stock was added",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "hcl",
+            "volume_ml": 25
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "na2co3",
+            "volume_ml": 10
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "transfer_dilution",
+      "control": "valid",
+      "pass": 2,
+      "expected": "accept",
+      "expectedScore": {
+        "min": 1
+      },
+      "score": 1,
+      "accepted": true,
+      "checks": [
+        {
+          "id": "measured",
+          "description": "Cylinder volume was measured before transfer",
+          "passed": true
+        },
+        {
+          "id": "transferred",
+          "description": "Stock moved from cylinder to beaker",
+          "passed": true
+        },
+        {
+          "id": "volume",
+          "description": "Beaker volume 100 ± 2 mL",
+          "passed": true
+        },
+        {
+          "id": "concentration",
+          "description": "Beaker concentration 0.100 ± 0.005 M",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "nacl",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "measure_volume",
+          "input": {
+            "container_id": "c_1"
+          },
+          "ok": true
+        },
+        {
+          "tool": "transfer",
+          "input": {
+            "source_id": "c_1",
+            "destination_id": "c_2",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "water",
+            "volume_ml": 90
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "transfer_dilution",
+      "control": "noop",
+      "pass": 2,
+      "expected": "reject",
+      "expectedScore": {
+        "min": 0,
+        "maxExclusive": 0.25
+      },
+      "score": 0,
+      "accepted": false,
+      "checks": [
+        {
+          "id": "measured",
+          "description": "Cylinder volume was measured before transfer",
+          "passed": false
+        },
+        {
+          "id": "transferred",
+          "description": "Stock moved from cylinder to beaker",
+          "passed": false
+        },
+        {
+          "id": "volume",
+          "description": "Beaker volume 100 ± 2 mL",
+          "passed": false
+        },
+        {
+          "id": "concentration",
+          "description": "Beaker concentration 0.100 ± 0.005 M",
+          "passed": false
+        }
+      ],
+      "trace": [
+        {
+          "tool": "get_lab_state",
+          "input": {},
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "transfer_dilution",
+      "control": "nearMiss",
+      "pass": 2,
+      "expected": "reject",
+      "expectedScore": {
+        "min": 0,
+        "maxExclusive": 1
+      },
+      "score": 0.5,
+      "accepted": false,
+      "checks": [
+        {
+          "id": "measured",
+          "description": "Cylinder volume was measured before transfer",
+          "passed": true
+        },
+        {
+          "id": "transferred",
+          "description": "Stock moved from cylinder to beaker",
+          "passed": true
+        },
+        {
+          "id": "volume",
+          "description": "Beaker volume 100 ± 2 mL",
+          "passed": false
+        },
+        {
+          "id": "concentration",
+          "description": "Beaker concentration 0.100 ± 0.005 M",
+          "passed": false
+        }
+      ],
+      "trace": [
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "nacl",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "measure_volume",
+          "input": {
+            "container_id": "c_1"
+          },
+          "ok": true
+        },
+        {
+          "tool": "transfer",
+          "input": {
+            "source_id": "c_1",
+            "destination_id": "c_2",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "water",
+            "volume_ml": 80
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "task": "transfer_dilution",
+      "control": "alternative",
+      "pass": 2,
+      "expected": "accept",
+      "expectedScore": {
+        "min": 1
+      },
+      "score": 1,
+      "accepted": true,
+      "checks": [
+        {
+          "id": "measured",
+          "description": "Cylinder volume was measured before transfer",
+          "passed": true
+        },
+        {
+          "id": "transferred",
+          "description": "Stock moved from cylinder to beaker",
+          "passed": true
+        },
+        {
+          "id": "volume",
+          "description": "Beaker volume 100 ± 2 mL",
+          "passed": true
+        },
+        {
+          "id": "concentration",
+          "description": "Beaker concentration 0.100 ± 0.005 M",
+          "passed": true
+        }
+      ],
+      "trace": [
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_1",
+            "reagent_id": "nacl",
+            "volume_ml": 10
+          },
+          "ok": true
+        },
+        {
+          "tool": "measure_volume",
+          "input": {
+            "container_id": "c_1"
+          },
+          "ok": true
+        },
+        {
+          "tool": "add_reagent",
+          "input": {
+            "container_id": "c_2",
+            "reagent_id": "water",
+            "volume_ml": 90
+          },
+          "ok": true
+        },
+        {
+          "tool": "transfer",
+          "input": {
+            "source_id": "c_1",
+            "destination_id": "c_2",
+            "volume_ml": 10
+          },
+          "ok": true
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "tasks": 6,
+    "controls": 24,
+    "replays": 48,
+    "falseAcceptances": 0,
+    "falseRejections": 0,
+    "repeatability": true
+  }
+}

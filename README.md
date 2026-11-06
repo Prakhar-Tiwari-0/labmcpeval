@@ -1,57 +1,44 @@
-# LabMCP
+# LabMCP agent evaluation prototype
 
-A chemistry lab you can run with your hands, or hand to an agent. Drag reagents onto a bench, mix things, watch a titration turn pink at the endpoint. An agent can do the same thing through WebMCP tools, on the same bench, at the same time as you.
+This branch adds a small, reproducible **scripted-control evaluation** to [LabMCP by Ishaan Koradia](https://github.com/ishaanko/labmcp). It demonstrates task setup and state-based grading using the existing chemistry simulator. It is inspired by simulator-based agent evaluation work, including Halluminate's, but is not affiliated with or compatible with Halluminate and makes no research claim.
 
-Live: https://labmcp.vercel.app
+## What's added
 
-Built for the OpenAI WebMCP Challenge, September 2026. MIT licensed.
+Six tasks use only chemistry and tools already in LabMCP: two precipitates, direct dilution, pH measurement and neutralization, titration with a concentration answer, carbonate gas release, and measured transfer followed by dilution. Each task in `src/eval/tasks.ts` defines a fixed scenario and seed, instruction, expected outcome, and named requirements. The grader maps each requirement to one check of internal state or the recorded tool-call history. It never accepts an agent's success claim. Alternate action orders and reagent volumes can pass when the stated result is met.
 
-## Run it locally
+The harness in `src/eval/replay.test.ts` calls the **same `buildTools` / `runTool` path** as the browser and in-app agent. It loads a clean seeded scenario for each control and records tool names, inputs, success or error, requirement checks, and scores. Grading reads the private LabState only after the attempt; the tool responses still use the upstream public summary and redaction policy. Grader code and control answers are evaluator-only fixtures, not task instructions or tool observations.
 
-```bash
-pnpm install
-cp .env.example .env.local
-pnpm dev
-```
+## Reproduce
 
-Open http://localhost:3000. Add `OPENAI_API_KEY` to `.env.local` if you want the in-app agent to talk back; without it the bench and every WebMCP tool still work, you just can't chat with the built-in lab partner.
-
-## Bring in an agent
-
-Press `A` in the app to open the in-app lab partner, a chat panel that calls the OpenAI Responses API and runs tools through the same code path your mouse clicks use.
-
-Or skip that entirely and open the live URL in ChatGPT's desktop browser. The page registers its tools on `document.modelContext` when it loads, so ChatGPT drives the bench directly, no server route on this end.
-
-Ask it things like:
-
-- "Help me find the acid concentration in the flask. Dispense the coarse part, then let me handle the endpoint."
-- "What just happened in the beaker?"
-- "Add 10 mL of water to Beaker 2 and tell me the new volume."
-
-In Chrome, enable `chrome://flags/#enable-webmcp-testing`, relaunch, and use the Model Context Tool Inspector extension to list and call the tools yourself. Any browser also gets a dev console: add `?console=1` to the URL and press the backtick key.
-
-## Scenarios
-
-- **Sandbox.** Every reagent, empty bench, do whatever you want.
-- **Titration** (default). Find an unknown acid's concentration with a burette and a pH meter.
-- **Reaction mystery.** Four unlabeled samples. Figure out which one bubbles, precipitates, or changes color.
-- **Precipitation.** Mix silver nitrate and sodium chloride, watch a white solid form.
-- **Neutralization.** Bring a beaker to pH 7.
-- **Dilution.** Make 100 mL of 0.10 M solution from a 1.0 M stock.
-- **Solubility.** Dissolve a solid, then heat and cool it.
-
-## How it works
-
-The chemistry is a small deterministic engine (`src/engine`), a zustand store, and an SVG bench. A mouse drag, a WebMCP tool call, and the in-app agent all go through the same command queue, so the human and the agent are never out of sync with each other. `get_lab_state` only reports what a person could actually see: color, volume, cloudiness. The agent has to attach a pH meter and read it like anyone else; nothing hands it the answer.
-
-## Tests
+After `pnpm install --frozen-lockfile`, run:
 
 ```bash
-pnpm check
+pnpm eval:replay
 ```
 
-Covers conservation of matter, titration stoichiometry, undo, and that no tool response leaks a hidden value.
+No model API key or paid service is needed. The command resets and replays all controls twice and writes `results/replay.json`. `pnpm exec next typegen && pnpm check` runs the upstream checks plus these tests.
 
-## Limits
+## Measured scripted-control results
 
-This is a teaching model, not a real lab simulator. It handles a handful of reactions well and treats everything else as inert mixing.
+Each row shows first-run scores for valid / no-op / near-miss / alternative. The second run produced identical requirement checks and scores.
+
+| Task | Valid | No-op | Near-miss | Alternative |
+| --- | ---: | ---: | ---: | ---: |
+| Two precipitates | 1.00 | 0.00 | 0.33 | 1.00 |
+| Direct dilution | 1.00 | 0.00 | 0.33 | 1.00 |
+| Measure then neutralize | 1.00 | 0.00 | 0.67 | 1.00 |
+| Titrate unknown | 1.00 | 0.00 | 0.75 | 1.00 |
+| Carbonate gas | 1.00 | 0.00 | 0.67 | 1.00 |
+| Transfer dilution | 1.00 | 0.00 | 0.50 | 1.00 |
+
+Across 48 replays there were **0 false acceptances, 0 false rejections, and exact repeatability** for these controls. These figures test the verifier against scripted cases; they are **not model performance**.
+
+## Grading boundaries
+
+Full credit requires every named check. Dilution uses ±2 mL and ±0.005 M; neutralization uses pH 7.0 ±0.1; titration's answer uses 2% relative error. These are the upstream scenario tolerances. A transfer or measurement requirement checks that a successful tool call occurred, while chemical outcomes are checked against internal species, deposited solids, reactions, the pH calculation, or an independently calculated titration equivalence volume. The first submitted titration answer is graded so a later revision cannot exploit the original scenario's reveal response.
+
+This is a deliberately small test set, not a statistically meaningful benchmark. It does not test model behavior, adversarial prompt attacks, browser timing, or the solubility scenario's asynchronous heating/cooling ticker. The original simulator is a teaching model with limited reaction coverage.
+
+## Upstream and license
+
+LabMCP's engine, UI, store, WebMCP tools, tests, and original history come from [ishaanko/labmcp](https://github.com/ishaanko/labmcp) at `0acf483`. The evaluation files, this README, and the replay results are additions in this branch. The original [MIT license](LICENSE) and copyright notice remain unchanged. The [original README](UPSTREAM_README.md) is preserved in full.

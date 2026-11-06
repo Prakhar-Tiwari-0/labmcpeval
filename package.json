@@ -9,7 +9,8 @@
     "lint": "eslint",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "check": "pnpm typecheck && pnpm lint && pnpm test"
+    "check": "pnpm typecheck && pnpm lint && pnpm test",
+    "eval:replay": "vitest run src/eval/replay.test.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
