@@ -1,6 +1,6 @@
 # LabMCP agent evaluation prototype
 
-This branch adds a small, reproducible **scripted-control evaluation** to [LabMCP by Ishaan Koradia](https://github.com/ishaanko/labmcp). It demonstrates task setup and state-based grading using the existing chemistry simulator. It is inspired by simulator-based agent evaluation work, including Halluminate's, but is not affiliated with or compatible with Halluminate and makes no research claim.
+This branch adds a small, reproducible **scripted-control evaluation** to [LabMCP, that me and Ishaan Kothari worked on for the OpenAI WebMCP Hackathon.](https://github.com/ishaanko/labmcp). It demonstrates task setup and state-based grading using the existing chemistry simulator. It is inspired by simulator-based agent evaluation work, including Halluminate's, but is not affiliated with or compatible with Halluminate and makes no research claim.
 
 ## What's added
 
